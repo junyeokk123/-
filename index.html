@@ -706,7 +706,11 @@ p.sub strong { color: var(--fire-red); }
                 <div id="exam-imm-options"></div>
                 <div class="review-explain" id="exam-imm-feedback" style="display:none;"></div>
             </div>
-            <button class="btn" id="btn-imm-next" style="display:none;">다음 문제 ▶</button>
+            <div class="flash-nav">
+                <button class="btn btn-secondary" id="btn-imm-prev" style="display:none;">◀ 이전 문제</button>
+                <button class="btn" id="btn-imm-next" style="display:none;">다음 문제 ▶</button>
+            </div>
+            <button class="btn btn-secondary" id="btn-imm-finish-early" style="margin-top:10px;">지금까지 채점 결과 보기 (남은 문제는 안 푼 문제로 저장)</button>
         </div>
     </div>
 </div>
@@ -1847,17 +1851,35 @@ function renderImmediateQuestion() {
 
     document.getElementById('exam-imm-feedback').style.display = 'none';
     document.getElementById('btn-imm-next').style.display = 'none';
+
+    // 이전 문제 버튼: 첫 문제가 아니면 항상 눌러서 돌아갈 수 있게 한다.
+    const prevBtn = document.getElementById('btn-imm-prev');
+    if (prevBtn) prevBtn.style.display = examImmIndex > 0 ? 'inline-block' : 'none';
+
+    // 이미 답을 고른 문제로 돌아온 경우(이전 문제 버튼으로), 새로 채점하지
+    // 않고 그때 골랐던 답과 정답 확인 화면을 그대로 다시 보여준다.
+    const existingPick = examImmPicks[examImmIndex];
+    if (existingPick !== null && existingPick !== undefined) {
+        showImmediateAnswerState(existingPick);
+    }
 }
 
 function handleImmediateAnswer(pickedVal) {
     if (examImmPicks[examImmIndex] !== null) return; // already answered
     examImmPicks[examImmIndex] = pickedVal;
-    const q = currentExamQuestions[examImmIndex];
-    const isCorrect = pickedVal === q.answer;
-    const dontKnow = pickedVal === 0;
     // Note: the wrong-answer store update happens once, uniformly for both
     // batch and immediate mode, inside finalizeExamResults() — not here —
     // so a question is never recorded/miss-counted twice.
+    showImmediateAnswerState(pickedVal);
+}
+
+// 정답 확인 화면(선택지 색칠 + 정답/오답 안내)을 그려주기만 하는 함수.
+// handleImmediateAnswer(방금 고른 경우)와 renderImmediateQuestion(이전 문제
+// 버튼으로 이미 답한 문제에 되돌아온 경우) 양쪽에서 재사용한다.
+function showImmediateAnswerState(pickedVal) {
+    const q = currentExamQuestions[examImmIndex];
+    const isCorrect = pickedVal === q.answer;
+    const dontKnow = pickedVal === 0;
 
     const optionsContainer = document.getElementById('exam-imm-options');
     optionsContainer.querySelectorAll('.option-label').forEach((label, optIndex) => {
@@ -1894,6 +1916,27 @@ document.getElementById('btn-imm-next').addEventListener('click', function() {
         document.getElementById('exam-imm-progress').style.width = '100%';
         finalizeExamResults((index) => examImmPicks[index]);
     }
+});
+
+document.getElementById('btn-imm-prev').addEventListener('click', function() {
+    if (examImmIndex > 0) {
+        examImmIndex--;
+        renderImmediateQuestion();
+    }
+});
+
+// 즉시채점 모드의 조기 제출: 900문제 중 일부만 풀고 나가려는 경우에도,
+// 아직 도달하지 않은(답을 고르지 않은) 문제는 '안 푼 문제' 목록에 자동으로
+// 저장되고 나중에 이어서 풀 수 있다 (finalizeExamResults가 null 값을
+// 미응답으로 처리해준다).
+document.getElementById('btn-imm-finish-early').addEventListener('click', function() {
+    const remaining = examImmPicks.filter(p => p === null || p === undefined).length;
+    if (remaining > 0) {
+        const ok = confirm(`아직 ${remaining}문제를 풀지 않았어요.\n지금 결과를 보면 안 푼 문제는 '안 푼 문제' 목록에 저장되고 나중에 이어서 풀 수 있어요.\n지금 볼까요?`);
+        if (!ok) return;
+    }
+    document.getElementById('exam-imm-progress').style.width = '100%';
+    finalizeExamResults((index) => examImmPicks[index]);
 });
 
 document.getElementById('btn-print').addEventListener('click', function() {
