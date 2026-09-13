@@ -100,7 +100,7 @@ body {
 .site-header .header-inner {
     max-width: 860px;
     margin: 0 auto;
-    padding: 18px 10px;
+    padding: 18px 48px;
     text-align: center;
 }
 .site-header .header-inner h2 {
@@ -507,6 +507,25 @@ p.sub strong { color: var(--fire-red); }
 }
 .theme-toggle:hover { background: rgba(255,255,255,.18); }
 
+.home-toggle {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,.35);
+    background: rgba(255,255,255,.08);
+    color: #fff;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    line-height: 1;
+}
+.home-toggle:hover { background: rgba(255,255,255,.18); }
+
 /* ---- 오답 메모 (memo on a wrong-review question) ---- */
 .wrong-memo-box { margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line); }
 .wrong-memo-label { display:block; font-size: 12.5px; font-weight:bold; color: var(--navy-700); margin-bottom: 6px; }
@@ -537,6 +556,7 @@ p.sub strong { color: var(--fire-red); }
 </head>
 <body>
 <div class="site-header">
+    <button type="button" class="home-toggle" id="btn-home" title="홈 화면으로 이동" aria-label="홈 화면으로 이동">🏠</button>
     <button type="button" class="theme-toggle" id="btn-theme-toggle" title="화면 모드 전환" aria-label="다크모드 전환">🌙</button>
     <div class="header-inner">
         <h2>🔥 화재조사관 자격시험 대비 문제풀이</h2>
@@ -603,6 +623,19 @@ p.sub strong { color: var(--fire-red); }
         <p class="sub">필기는 틀린 문제, 실기는 △(부분점수)·X(오답)로 표시한 문제를 모아둔 목록이에요. 다시 풀어서 맞히면(필기: 정답 선택 / 실기: O 표시) 목록에서 자동으로 빠집니다. 다 풀지 못하고 중간에 제출한 문제나, 정답을 맞혔지만 '다시 풀기'로 표시해둔 문제는 안 푼 문제 목록에 쌓여요.</p>
 
         <div class="wrong-section-title">📝 필기</div>
+        <div class="form-group" style="max-width:640px; margin:0 auto 14px;">
+            <label>필기 복습 채점 방식</label>
+            <div class="checkbox-group" style="grid-template-columns: 1fr 1fr;">
+                <label class="checkbox-label">
+                    <input type="radio" name="wrong-grade-mode" value="batch" checked>
+                    <span style="white-space:nowrap;">다 풀고 한번에 채점</span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="radio" name="wrong-grade-mode" value="immediate">
+                    <span style="white-space:nowrap;">문제마다 바로 정답 확인</span>
+                </label>
+            </div>
+        </div>
         <div class="mode-grid">
             <div class="mode-card written disabled" id="wrong-card-written">
                 <div class="mode-emoji">📝</div>
@@ -705,6 +738,11 @@ p.sub strong { color: var(--fire-red); }
                 <div class="question-title" id="exam-imm-question"></div>
                 <div id="exam-imm-options"></div>
                 <div class="review-explain" id="exam-imm-feedback" style="display:none;"></div>
+                <div class="wrong-memo-box" id="exam-imm-memo-box" style="display:none;">
+                    <label class="wrong-memo-label">📝 나만의 메모</label>
+                    <textarea class="wrong-memo-textarea" id="exam-imm-memo-textarea" placeholder="헷갈리는 포인트, 암기 팁 등을 적어두세요"></textarea>
+                    <div class="wrong-memo-hint">화면을 벗어나면(다른 곳 클릭) 자동으로 저장돼요.</div>
+                </div>
             </div>
             <div class="flash-nav">
                 <button class="btn btn-secondary" id="btn-imm-prev" style="display:none;">◀ 이전 문제</button>
@@ -1156,6 +1194,19 @@ function updateWrongBadgeUI() {
 }
 
 // ---- mode navigation ----
+// 어느 화면에 있든 좌측 상단 홈 버튼으로 바로 모드 선택 화면으로 이동.
+// 문제를 풀던 중(즉시채점/일괄채점/실기 카드)이면 저장 없이 나가는 것이니
+// 한 번 확인한다 — 제출/조기 제출 버튼을 먼저 쓰면 안전하게 저장된다.
+document.getElementById('btn-home').addEventListener('click', () => {
+    const active = document.querySelector('.screen.active');
+    const inProgressScreens = ['screen-exam', 'screen-practical-card'];
+    if (active && inProgressScreens.includes(active.id)) {
+        const ok = confirm('지금 풀고 있는 문제는 저장되지 않아요.\n(저장하려면 하단이나 화면의 제출·채점 결과 보기 버튼을 먼저 눌러주세요)\n그래도 홈 화면으로 이동할까요?');
+        if (!ok) return;
+    }
+    clearInterval(timerInterval);
+    showScreen('screen-mode');
+});
 document.getElementById('mode-card-written').addEventListener('click', () => showScreen('screen-setup'));
 document.getElementById('mode-card-practical').addEventListener('click', () => showScreen('screen-setup-practical'));
 document.getElementById('back-to-mode-1').addEventListener('click', () => showScreen('screen-mode'));
@@ -1364,16 +1415,31 @@ function setExamWrapMode(mode) {
     document.getElementById('exam-submit-bar').style.display = mode === 'batch' ? 'flex' : 'none';
 }
 
-function startMcqReview(items) {
+// 틀린문제/안 푼 문제를 다시 풀 때도 "다 풀고 한번에 채점"과 "문제마다 바로
+// 정답 확인" 중 고를 수 있게 한다 (screen-wrong의 라디오 버튼).
+function currentWrongGradeMode() {
+    const r = document.querySelector('input[name="wrong-grade-mode"]:checked');
+    return r ? r.value : 'batch';
+}
+
+function startMcqReview(items, mode) {
     if (items.length === 0) return;
     userName = currentProfile.name;
     selectedSubjects = Array.from(new Set(items.map(q => q.category)));
     currentExamQuestions = items.map(q => ({ ...q }));
-    examGradeMode = 'batch';
+    examGradeMode = mode === 'immediate' ? 'immediate' : 'batch';
     isWrongReviewMode.mcq = true;
-    setExamWrapMode('batch');
-    renderQuestions();
-    document.getElementById('exam-total').textContent = currentExamQuestions.length;
+    if (examGradeMode === 'immediate') {
+        examImmPicks = new Array(currentExamQuestions.length).fill(null);
+        examImmIndex = 0;
+        setExamWrapMode('immediate');
+        document.getElementById('exam-imm-total').textContent = currentExamQuestions.length;
+        renderImmediateQuestion();
+    } else {
+        setExamWrapMode('batch');
+        renderQuestions();
+        document.getElementById('exam-total').textContent = currentExamQuestions.length;
+    }
     showScreen('screen-exam');
     startTimer();
 }
@@ -1391,13 +1457,13 @@ function startPracticalReview(items) {
 }
 
 document.getElementById('wrong-card-written').addEventListener('click', () => {
-    startMcqReview(wrongStore.getAllByPriority('mcq')); // most-missed first
+    startMcqReview(wrongStore.getAllByPriority('mcq'), currentWrongGradeMode()); // most-missed first
 });
 document.getElementById('unanswered-card-written').addEventListener('click', () => {
-    startMcqReview(unansweredStore.getAll('mcq'));
+    startMcqReview(unansweredStore.getAll('mcq'), currentWrongGradeMode());
 });
 document.getElementById('btn-combined-written').addEventListener('click', () => {
-    startMcqReview(combinedReviewItems('mcq'));
+    startMcqReview(combinedReviewItems('mcq'), currentWrongGradeMode());
 });
 
 document.getElementById('wrong-card-practical').addEventListener('click', () => {
@@ -1852,6 +1918,17 @@ function renderImmediateQuestion() {
     document.getElementById('exam-imm-feedback').style.display = 'none';
     document.getElementById('btn-imm-next').style.display = 'none';
 
+    // 틀린문제/안 푼 문제를 즉시채점 방식으로 다시 풀 때도 메모를 남길 수 있게.
+    const memoBox = document.getElementById('exam-imm-memo-box');
+    if (memoBox) {
+        if (isWrongReviewMode.mcq) {
+            memoBox.style.display = 'block';
+            document.getElementById('exam-imm-memo-textarea').value = q.memo || '';
+        } else {
+            memoBox.style.display = 'none';
+        }
+    }
+
     // 이전 문제 버튼: 첫 문제가 아니면 항상 눌러서 돌아갈 수 있게 한다.
     const prevBtn = document.getElementById('btn-imm-prev');
     if (prevBtn) prevBtn.style.display = examImmIndex > 0 ? 'inline-block' : 'none';
@@ -1863,6 +1940,21 @@ function renderImmediateQuestion() {
         showImmediateAnswerState(existingPick);
     }
 }
+
+// 즉시채점 모드 메모칸: 포커스를 벗어나면 오답/안 푼 문제 store 양쪽에 저장
+// 시도(실제로 이 id를 갖고 있는 쪽에만 반영됨). 문제마다 다시 만들지 않고
+// 한 번만 배선한다.
+(function wireImmMemoOnce() {
+    const ta = document.getElementById('exam-imm-memo-textarea');
+    if (!ta) return;
+    ta.addEventListener('focusout', function() {
+        const q = currentExamQuestions[examImmIndex];
+        if (!q) return;
+        const wid = wrongIdFor(q);
+        wrongStore.setMemo('mcq', wid, this.value);
+        unansweredStore.setMemo('mcq', wid, this.value);
+    });
+})();
 
 function handleImmediateAnswer(pickedVal) {
     if (examImmPicks[examImmIndex] !== null) return; // already answered
@@ -1880,6 +1972,7 @@ function showImmediateAnswerState(pickedVal) {
     const q = currentExamQuestions[examImmIndex];
     const isCorrect = pickedVal === q.answer;
     const dontKnow = pickedVal === 0;
+    const wid = wrongIdFor(q);
 
     const optionsContainer = document.getElementById('exam-imm-options');
     optionsContainer.querySelectorAll('.option-label').forEach((label, optIndex) => {
@@ -1901,7 +1994,17 @@ function showImmediateAnswerState(pickedVal) {
     feedback.innerHTML = (isCorrect ? '<strong style="color:#1e6b3f;">✔ 정답입니다!</strong>'
         : dontKnow ? `<strong style="color:var(--fire-red-dark);">🤷 모르겠음으로 표시했어요.</strong> 정답: ${q.answer}번 (오답노트에 추가됐어요)`
         : `<strong style="color:var(--fire-red-dark);">✘ 오답입니다.</strong> 정답: ${q.answer}번`)
-        + (q.reference ? `<br><strong>출제근거:</strong> ${q.reference}` : '');
+        + (q.reference ? `<br><strong>출제근거:</strong> ${q.reference}` : '')
+        // 정답이어도 헷갈렸다면 그 자리에서 바로 오답노트/안 푼 문제로 추가할
+        // 수 있게 — "다 풀고 채점" 결과 화면에만 있던 버튼을, 즉시채점 모드는
+        // 문제마다 바로 정답을 보여주므로 그 즉시 여기서도 누를 수 있게 한다.
+        + (isCorrect ? `<div class="review-recheck-row">
+                <button type="button" class="review-recheck-btn" data-recheck-id="${wid}" data-recheck-store="wrong">🔁 오답노트에 추가</button>
+                <button type="button" class="review-recheck-btn" data-recheck-id="${wid}" data-recheck-store="unanswered">🔁 안 푼 문제로 추가</button>
+            </div>` : '');
+    if (isCorrect) {
+        wireReviewRecheckButtons(feedback, [q], 'mcq');
+    }
 
     const nextBtn = document.getElementById('btn-imm-next');
     nextBtn.textContent = (examImmIndex === currentExamQuestions.length - 1) ? '결과 보기' : '다음 문제 ▶';
