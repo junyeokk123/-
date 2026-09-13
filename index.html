@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>화재조사관 자격시험 대비 문제풀이</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="화재조사관 문제풀이">
+<meta name="theme-color" content="#16314f">
+<meta name="description" content="화재조사관 자격시험 1차 필기·2차 실기 자가학습 문제풀이 프로그램 — 기기 간 자동 동기화(Supabase) 지원.">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+:root {
+    --navy-900: #0e2237;
+    --navy-800: #16314f;
+    --navy-700: #1d4066;
+    --navy-600: #275a8e;
+    --navy-100: #e8eef6;
+    --gold: #f7c600;
+    --fire-red: #c8332b;
+    --fire-red-dark: #a8241d;
+    --ink: #243140;
+    --muted: #5b6b7d;
+    --line: #d8e0e9;
+    --bg: #eef2f6;
+    --card: #ffffff;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+    font-family: 'Malgun Gothic', '맑은 고딕', 'Apple SD Gothic Neo', sans-serif;
+    background-color: var(--bg);
+    background-image: linear-gradient(180deg, #e6ecf3 0%, #eef2f6 320px);
+    margin: 0;
+    padding: 0 20px 48px;
+    color: var(--ink);
+    word-break: keep-all;
+}
+.site-header {
+    margin: 0 -20px 0;
+    background: linear-gradient(135deg, #0c1f33 0%, #16314f 55%, #1d4066 100%);
+    border-bottom: 4px solid var(--gold);
+    position: relative;
+}
+.site-header::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -4px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold) 62%, var(--fire-red) 62%, var(--fire-red) 100%);
+}
+.site-header .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 18px 10px;
+    text-align: center;
+}
+.site-header .header-inner h2 {
+    color: #fff;
+    margin: 0;
+    font-size: 20px;
+    letter-spacing: -0.3px;
+}
+.site-header .header-inner p {
+    color: #c8d7ea;
+    margin: 6px 0 0;
+    font-size: 13px;
+}
+.container {
+    max-width: 860px;
+    margin: 28px auto 0;
+    background: var(--card);
+    padding: 38px 42px 42px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    box-shadow: 0 10px 30px rgba(14, 34, 55, .08), 0 2px 6px rgba(14, 34, 55, .05);
+}
+h1, h2 {
+    text-align: center;
+    color: var(--navy-900);
+    letter-spacing: -0.4px;
+}
+h1 {
+    font-size: 23px;
+    margin: 6px 0 8px;
+    padding-bottom: 16px;
+    position: relative;
+}
+h1::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 56px;
+    height: 3px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--gold) 0 60%, var(--fire-red) 60% 100%);
+}
+p.sub { color: var(--muted); text-align: center; margin: 0 0 28px; font-size: 14px; word-break: keep-all; }
+p.sub strong { color: var(--fire-red); }
+
+.form-group { margin-bottom: 18px; }
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: bold;
+    font-size: 13.5px;
+    color: var(--navy-700);
+}
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid #c6d2de;
+    border-radius: 9px;
+    box-sizing: border-box;
+    font-size: 15px;
+    color: var(--ink);
+    background: #fbfcfe;
+    font-family: inherit;
+}
+.form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: var(--navy-600);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(39, 90, 142, .15);
+}
+
+.btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(180deg, #244e7c 0%, var(--navy-800) 100%);
+    color: white;
+    border: none;
+    border-radius: 9px;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: inherit;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: 0 3px 8px rgba(22, 49, 79, .25);
+}
+.btn:hover { filter: brightness(1.08); }
+.btn-secondary {
+    background: linear-gradient(180deg, #76879b 0%, #5d6f84 100%);
+    box-shadow: 0 3px 8px rgba(93, 111, 132, .25);
+}
+#btn-submit {
+    background: linear-gradient(180deg, #d04138 0%, var(--fire-red-dark) 100%);
+    box-shadow: 0 3px 8px rgba(168, 36, 29, .28);
+}
+
+.cat-toolbar { display:flex; justify-content:flex-end; gap:8px; max-width:640px; margin: 4px auto 0; }
+.cat-toolbar button {
+    border: 1px solid var(--line);
+    background: #f8fafc;
+    color: var(--navy-700);
+    font-size: 12.5px;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+.cat-toolbar button:hover { background: var(--navy-100); }
+
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    max-width: 640px;
+    margin: 10px auto 0;
+}
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--navy-800);
+    cursor: pointer;
+    background: #f8fafc;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1.5px solid var(--line);
+    user-select: none;
+}
+.checkbox-label:hover { border-color: var(--navy-600); background: #fff; }
+.checkbox-label:has(input:checked) {
+    border-color: var(--navy-700);
+    background: var(--navy-100);
+    box-shadow: inset 0 0 0 1px var(--navy-700);
+}
+.checkbox-label input { margin-right: 9px; width: 17px; height: 17px; accent-color: var(--navy-700); flex-shrink: 0; }
+.checkbox-label span { word-break: keep-all; }
+.checkbox-label .cnt { color: var(--muted); font-weight: normal; margin-left: 4px; font-size: 12.5px; }
+
+#timer-box {
+    position: sticky;
+    top: 12px;
+    background: linear-gradient(135deg, #244e7c 0%, var(--navy-800) 100%);
+    color: white;
+    padding: 12px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    z-index: 100;
+    box-shadow: 0 6px 16px rgba(14, 34, 55, .25);
+}
+.question-block {
+    margin-bottom: 22px;
+    padding: 20px 22px;
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--navy-700);
+    border-radius: 10px;
+    background: #fff;
+}
+.question-block.correct { border-left-color: #2e8b57; }
+.question-block.wrong { border-left-color: var(--fire-red); }
+.question-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--navy-900);
+    margin-bottom: 14px;
+    line-height: 1.55;
+    padding-left: 1.7em;
+    text-indent: -1.7em;
+}
+.q-cat {
+    display:inline-block;
+    font-size: 11.5px;
+    font-weight: bold;
+    color: var(--navy-700);
+    background: var(--navy-100);
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+}
+.option-label {
+    font-size: 14.5px;
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 6px;
+    cursor: pointer;
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    line-height: 1.5;
+}
+.option-label input[type="radio"] { margin-top: 3px; margin-right: 10px; flex-shrink: 0; width: 16px; height: 16px; accent-color: var(--navy-700); }
+.option-label:hover { background: #f1f5fa; border-color: #dde6ef; }
+.option-label:has(input:checked) { background: var(--navy-100); border-color: #b9cce2; font-weight: bold; }
+
+.review-opt { padding: 6px 10px; font-size: 13.5px; border-radius: 6px; margin-bottom: 4px; }
+.review-opt.is-correct { background: #e6f6ec; color: #1e6b3f; font-weight: bold; }
+.review-opt.is-wrong-pick { background: #fbe8e7; color: var(--fire-red-dark); font-weight: bold; text-decoration: line-through; }
+.review-explain { margin-top: 10px; padding: 10px 12px; background: #f7f9fc; border-radius: 8px; font-size: 13px; color: var(--muted); }
+.review-explain strong { color: var(--navy-700); }
+
+.result-box {
+    border: 1px solid #c3cfdd;
+    padding: 28px 26px;
+    border-radius: 12px;
+    background: #fff;
+    margin-top: 20px;
+}
+.result-item { font-size: 16px; margin-bottom: 8px; color: var(--ink); text-align:center; }
+.result-item strong { color: var(--navy-700); }
+.result-score {
+    font-size: 42px;
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+    color: var(--fire-red);
+    text-align: center;
+    margin: 18px 0;
+    padding: 14px 0;
+    border-top: 2px solid var(--navy-100);
+    border-bottom: 2px solid var(--navy-100);
+}
+.result-sub { text-align:center; color: var(--muted); font-size: 13.5px; margin-bottom: 10px; }
+
+.mode-grid { display:grid; grid-template-columns: 1fr 1fr; gap:18px; max-width:720px; margin:26px auto 0; }
+.mode-card {
+    border: 1.5px solid var(--line);
+    border-radius: 14px;
+    background: #fff;
+    padding: 26px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: box-shadow .15s, border-color .15s, transform .15s;
+}
+.mode-card:hover { border-color: var(--navy-600); box-shadow: 0 10px 24px rgba(14,34,55,.12); transform: translateY(-2px); }
+.mode-card .mode-emoji { font-size: 38px; margin-bottom: 6px; }
+.mode-card h3 { margin: 6px 0 8px; color: var(--navy-900); font-size: 18px; }
+.mode-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.mode-card .mode-tag { display:inline-block; margin-top:10px; font-size:11.5px; font-weight:bold; color:var(--navy-700); background:var(--navy-100); padding:3px 10px; border-radius:10px; }
+.mode-card.practical .mode-tag { color: var(--fire-red-dark); background: #fdece9; }
+.back-link { display:inline-block; margin-bottom:14px; color: var(--navy-600); font-size:13px; font-weight:bold; cursor:pointer; text-decoration:none; }
+.back-link:hover { text-decoration:underline; }
+
+.mode-card.disabled { opacity:.45; cursor:not-allowed; }
+.mode-card.disabled:hover { border-color: var(--line); box-shadow:none; transform:none; }
+.wrong-entry-link { display:flex; align-items:center; justify-content:center; gap:8px; margin:16px auto 0; max-width:720px; }
+.sync-badge { display:inline-block; font-size:10.5px; font-weight:bold; padding:2px 8px; border-radius:8px; background:var(--navy-100); color:var(--navy-700); }
+.sync-note { font-size:11.5px; color:var(--muted); background:#f8fafc; border:1px solid var(--line); padding:10px 14px; border-radius:10px; margin:16px auto 0; max-width:720px; line-height:1.6; word-break:keep-all; text-align:left; }
+
+.profile-box { max-width:640px; margin:20px auto 0; padding:18px 20px; background:#f8fafc; border:1.5px solid var(--line); border-radius:12px; }
+.profile-row { display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
+.profile-hint { font-size:12px; color:var(--muted); margin:10px 0 0; line-height:1.5; word-break: keep-all; }
+#profile-status { font-size:12.5px; font-weight:bold; color: var(--navy-700); margin-top:8px; min-height:1em; word-break: keep-all; }
+@media (max-width: 640px) { .profile-row { grid-template-columns: 1fr; } }
+
+.history-summary-row { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; max-width:640px; margin:18px auto; }
+.history-stat { background:#fff; border:1px solid var(--line); border-radius:10px; padding:14px 10px; text-align:center; }
+.history-stat .num { font-size:24px; font-weight:bold; color:var(--navy-800); font-variant-numeric:tabular-nums; }
+.history-stat .lbl { font-size:11.5px; color:var(--muted); margin-top:2px; }
+.history-chart { max-width:640px; margin:0 auto 22px; display:flex; align-items:flex-end; gap:6px; height:120px; padding:0 4px; border-bottom:2px solid var(--navy-100); }
+.history-bar-wrap { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; }
+.history-bar { width:100%; max-width:30px; border-radius:4px 4px 0 0; background: linear-gradient(180deg, var(--navy-600), var(--navy-800)); position:relative; }
+.history-bar.practical-bar { background: linear-gradient(180deg, #e0665c, var(--fire-red-dark)); }
+.history-bar .bar-val { position:absolute; top:-18px; left:50%; transform:translateX(-50%); font-size:10.5px; font-weight:bold; color:var(--navy-700); white-space:nowrap; }
+.history-bar-idx { font-size:10px; color:var(--muted); margin-top:4px; }
+.history-table { width:100%; max-width:640px; margin:0 auto; border-collapse:collapse; font-size:13px; }
+.history-table th, .history-table td { padding:9px 10px; border-bottom:1px solid var(--line); text-align:center; }
+.history-table th { background:var(--navy-100); color:var(--navy-800); font-size:12px; }
+.history-table td.hist-mode-written { color:var(--navy-700); font-weight:bold; }
+.history-table td.hist-mode-practical { color:var(--fire-red-dark); font-weight:bold; }
+.history-empty { text-align:center; color:var(--muted); padding:40px 10px; font-size:14px; }
+.growth-callout { max-width:640px; margin:14px auto 0; padding:12px 16px; border-radius:10px; background:#eef6f0; border:1px solid #bfe3c8; font-size:13px; color:#1e6b3f; text-align:center; }
+.growth-callout.neutral { background:#f7f9fc; border-color:var(--line); color:var(--navy-700); }
+.growth-callout.down { background:#fdf1ef; border-color:#f3c6bf; color:var(--fire-red-dark); }
+
+.progress-track { height:8px; border-radius:5px; background:var(--navy-100); overflow:hidden; margin: 6px 0 22px; max-width:640px; margin-left:auto; margin-right:auto; }
+.progress-fill { height:100%; background: linear-gradient(90deg, var(--navy-700), var(--navy-600)); border-radius:5px; transition: width .25s ease; }
+.card-counter { text-align:center; color:var(--muted); font-size:13px; margin-bottom:4px; font-weight:bold; }
+
+.flash-card {
+    max-width: 640px;
+    margin: 0 auto;
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--fire-red);
+    border-radius: 12px;
+    background: #fff;
+    padding: 24px 24px 22px;
+}
+.flash-official { display:inline-block; font-size:11px; font-weight:bold; color:#8a5a00; background:#fff3cd; padding:2px 9px; border-radius:10px; margin-bottom:8px; }
+.flash-type { display:inline-block; font-size:11px; font-weight:bold; padding:2px 9px; border-radius:10px; margin-bottom:8px; margin-right:6px; }
+.flash-type-sa { color: var(--navy-800); background: var(--navy-100); }
+.flash-type-es { color:#6b3fa0; background:#f1e8fb; }
+.flash-question { font-size: 16.5px; font-weight:bold; color: var(--navy-900); line-height:1.6; margin-bottom: 16px; white-space: pre-wrap; }
+.flash-textarea {
+    width: 100%; min-height: 110px; padding: 12px 14px; border: 1.5px solid #c6d2de; border-radius: 9px;
+    font-size: 14.5px; font-family: inherit; color: var(--ink); background:#fbfcfe; resize: vertical; box-sizing:border-box;
+}
+.flash-textarea:focus { outline:none; border-color: var(--navy-600); background:#fff; }
+.flash-hint { font-size:12.5px; color:var(--muted); margin: 6px 0 16px; }
+.flash-answer {
+    margin-top: 6px; padding: 16px 18px; background: #f7f9fc; border-radius: 10px; border: 1px dashed #c6d2de;
+    font-size: 14px; line-height: 1.7; color: var(--ink); white-space: pre-wrap;
+}
+.flash-answer-label { font-size:12.5px; font-weight:bold; color:var(--navy-700); margin-bottom:8px; display:block; }
+.flash-source { margin-top:10px; font-size:11.5px; color:var(--muted); }
+.self-mark-row { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; margin-top:18px; }
+.self-mark-row button {
+    padding: 13px 6px; border-radius: 9px; border: 1.5px solid var(--line); background:#f8fafc;
+    font-weight:bold; font-size:14px; cursor:pointer; font-family:inherit;
+}
+.self-mark-row button.mark-o { color:#1e6b3f; }
+.self-mark-row button.mark-o:hover, .self-mark-row button.mark-o.picked { background:#e6f6ec; border-color:#1e6b3f; }
+.self-mark-row button.mark-h { color:#8a5a00; }
+.self-mark-row button.mark-h:hover, .self-mark-row button.mark-h.picked { background:#fff3cd; border-color:#8a5a00; }
+.self-mark-row button.mark-x { color:var(--fire-red-dark); }
+.self-mark-row button.mark-x:hover, .self-mark-row button.mark-x.picked { background:#fbe8e7; border-color:var(--fire-red-dark); }
+.flash-nav { display:flex; justify-content:space-between; gap:10px; margin-top:18px; max-width:640px; margin-left:auto; margin-right:auto; }
+.flash-nav .btn { margin-top:0; }
+
+.pr-review-item { border:1px solid var(--line); border-left:4px solid var(--navy-700); border-radius:10px; padding:16px 18px; margin-bottom:14px; background:#fff; }
+.pr-review-item.mark-x-item { border-left-color: var(--fire-red); }
+.pr-review-item.mark-h-item { border-left-color: #c99400; }
+.pr-review-item .pr-q { font-weight:bold; color:var(--navy-900); margin-bottom:8px; line-height:1.55; }
+.pr-review-item .pr-a { font-size:13.5px; color:var(--ink); background:#f7f9fc; padding:10px 12px; border-radius:8px; white-space:pre-wrap; line-height:1.6; }
+.pr-review-item .pr-mark { display:inline-block; font-size:11.5px; font-weight:bold; padding:2px 9px; border-radius:10px; margin-bottom:8px; }
+.pr-review-item .pr-mark.o { color:#1e6b3f; background:#e6f6ec; }
+.pr-review-item .pr-mark.h { color:#8a5a00; background:#fff3cd; }
+.pr-review-item .pr-mark.x { color:var(--fire-red-dark); background:#fbe8e7; }
+
+.screen { display: none; }
+.screen.active { display: block; animation: fadeUp .35s ease; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 640px) {
+    body { padding: 0 12px 36px; }
+    .site-header { margin: 0 -12px; }
+    .container { padding: 24px 18px 28px; margin-top: 18px; }
+    h1 { font-size: 19px; }
+    .checkbox-group { grid-template-columns: 1fr; }
+}
+@media print {
+    body { background: #fff; }
+    .site-header, .btn, .cat-toolbar, .self-mark-row, .flash-nav, .back-link { display: none !important; }
+    .container { box-shadow: none; border: none; max-width: 100%; padding: 0; }
+    #timer-box { display: none !important; }
+}
+</style>
+</head>
+<body>
+<div class="site-header">
+    <div class="header-inner">
+        <h2>🔥 화재조사관 자격시험 대비 문제풀이</h2>
+        <p>1차 필기(객관식) · 2차 실기(단답형·주관식) 자가학습 프로그램</p>
+    </div>
+</div>
+
+<div id="screen-mode" class="screen active">
+    <div class="container">
+        <h1>모드 선택</h1>
+        <p class="sub">실제 시험처럼 <strong>1차 필기</strong>와 <strong>2차 실기</strong>를 나누어 연습할 수 있어요.</p>
+
+        <div class="profile-box">
+            <div class="profile-row">
+                <div class="form-group" style="margin-bottom:0;">
+                    <label for="profile-station">소속 소방서</label>
+                    <select id="profile-station"></select>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label for="profile-name">이름</label>
+                    <input type="text" id="profile-name" placeholder="예: 홍길동">
+                </div>
+            </div>
+            <p class="profile-hint">입력하지 않아도 바로 문제를 풀 수 있어요. 소방서와 이름을 입력하면 이 브라우저에 응시 기록이 저장돼요. 같은 소방서·이름으로 다시 풀 때마다 점수 변화와 성장 추이를 확인할 수 있어요.</p>
+            <div id="profile-status"></div>
+            <span class="back-link" id="btn-show-history" style="margin-top:6px;">📈 내 성장 기록 보기</span>
+        </div>
+
+        <div class="mode-grid">
+            <div class="mode-card written" id="mode-card-written">
+                <div class="mode-emoji">📝</div>
+                <h3>1차 필기</h3>
+                <p>객관식 4지선다<br>화재조사론 · 화재학 · 화재원인판정<br>과목별 25문항, 자동채점</p>
+                <span class="mode-tag">객관식 · 자동채점</span>
+            </div>
+            <div class="mode-card practical" id="mode-card-practical">
+                <div class="mode-emoji">✍️</div>
+                <h3>2차 실기</h3>
+                <p>단답형 · 주관식 서술형<br>화재감식학 · 화재조사실무<br>플래시카드로 직접 풀고 셀프채점</p>
+                <span class="mode-tag">단답형·주관식 · 셀프채점</span>
+            </div>
+        </div>
+
+        <div class="wrong-entry-link">
+            <span class="back-link" id="btn-show-wrong" style="margin-bottom:0;">🔁 틀린문제 모음 보기</span>
+            <span class="sync-badge" id="wrong-sync-badge">기기 저장</span>
+        </div>
+    </div>
+</div>
+
+<div id="screen-history" class="screen">
+    <div class="container">
+        <span class="back-link" id="back-to-mode-3">← 모드 선택으로</span>
+        <h1>내 성장 기록</h1>
+        <p class="sub" id="history-subtitle"></p>
+        <div id="history-content"></div>
+    </div>
+</div>
+
+<div id="screen-wrong" class="screen">
+    <div class="container">
+        <span class="back-link" id="back-to-mode-4">← 모드 선택으로</span>
+        <h1>틀린문제 모음</h1>
+        <p class="sub">필기는 틀린 문제, 실기는 △(부분점수)·X(오답)로 표시한 문제를 모아둔 목록이에요. 다시 풀어서 맞히면(필기: 정답 선택 / 실기: O 표시) 목록에서 자동으로 빠집니다.</p>
+
+        <div class="mode-grid">
+            <div class="mode-card written disabled" id="wrong-card-written">
+                <div class="mode-emoji">📝</div>
+                <h3>필기 오답</h3>
+                <p id="wrong-desc-written">아직 틀린 문제가 없어요.</p>
+                <span class="mode-tag" id="wrong-tag-written">0문제</span>
+            </div>
+            <div class="mode-card practical disabled" id="wrong-card-practical">
+                <div class="mode-emoji">✍️</div>
+                <h3>실기 오답</h3>
+                <p id="wrong-desc-practical">아직 틀리거나 △로 표시한 문제가 없어요.</p>
+                <span class="mode-tag" id="wrong-tag-practical">0문제</span>
+            </div>
+        </div>
+
+        <div class="sync-note" id="wrong-sync-note"></div>
+
+        <button class="btn btn-secondary" id="btn-wrong-clear" style="margin-top:18px;">틀린문제 목록 전체 지우기</button>
+    </div>
+</div>
+
+<div id="screen-setup" class="screen">
+    <div class="container">
+        <span class="back-link" id="back-to-mode-1">← 모드 선택으로</span>
+        <h1>필기 응시 설정</h1>
+        <p class="sub">과목(분야)을 선택하고 문항 수를 정한 뒤 <strong>시험 시작</strong>을 눌러주세요. (분야는 여러 개 선택 가능)</p>
+
+        <div class="cat-toolbar">
+            <button type="button" id="btn-select-all">전체선택</button>
+            <button type="button" id="btn-select-none">전체해제</button>
+        </div>
+        <div class="checkbox-group" id="subject-checkboxes"></div>
+
+        <div class="form-group" style="max-width:640px; margin:22px auto 0;">
+            <label for="numq">문항 수</label>
+            <select id="numq">
+                <option value="20">20문제</option>
+                <option value="30" selected>30문제</option>
+                <option value="50">50문제</option>
+                <option value="9999">선택 분야 전체 (복습용)</option>
+            </select>
+        </div>
+
+        <div class="form-group" style="max-width:640px; margin:18px auto 0;">
+            <label>채점 방식</label>
+            <div class="checkbox-group" style="grid-template-columns: 1fr;">
+                <label class="checkbox-label">
+                    <input type="radio" name="exam-grade-mode" value="batch" checked>
+                    <span style="white-space:nowrap;">다 풀고 한번에 채점</span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="radio" name="exam-grade-mode" value="immediate">
+                    <span style="white-space:nowrap;">문제마다 바로 정답 확인</span>
+                </label>
+            </div>
+        </div>
+
+        <button id="btn-start" class="btn">시험 시작</button>
+    </div>
+</div>
+
+<div id="screen-exam" class="screen">
+    <div class="container">
+        <div id="timer-box">⏱ 00:00</div>
+        <h1>화재조사관 이론평가</h1>
+
+        <div id="exam-batch-wrap">
+            <p class="sub">총 <strong id="exam-total"></strong>문제 · 끝까지 응답 후 하단의 제출 버튼을 눌러주세요.</p>
+            <div id="exam-questions"></div>
+            <button id="btn-submit" class="btn">제출하고 채점하기</button>
+        </div>
+
+        <div id="exam-immediate-wrap" style="display:none;">
+            <p class="sub">한 문제씩 풀고 바로 정답을 확인해요. 총 <strong id="exam-imm-total"></strong>문제 중 <strong id="exam-imm-current"></strong>번째</p>
+            <div class="card-counter" id="exam-imm-counter"></div>
+            <div class="progress-track"><div class="progress-fill" id="exam-imm-progress" style="width:0%"></div></div>
+            <div class="question-block" id="exam-imm-block">
+                <div class="q-cat" id="exam-imm-cat"></div>
+                <div class="question-title" id="exam-imm-question"></div>
+                <div id="exam-imm-options"></div>
+                <div class="review-explain" id="exam-imm-feedback" style="display:none;"></div>
+            </div>
+            <button class="btn" id="btn-imm-next" style="display:none;">다음 문제 ▶</button>
+        </div>
+    </div>
+</div>
+
+<div id="screen-result" class="screen">
+    <div class="container">
+        <h1>채점 결과 (필기)</h1>
+        <div class="result-box">
+            <div class="result-item"><strong id="res-name-line"></strong></div>
+            <div class="result-item">응시일자: <span id="res-date"></span> · 응시분야: <span id="res-subjects"></span></div>
+            <div class="result-score"><span id="res-score"></span> / 100 점</div>
+            <div class="result-sub" id="res-correct-count"></div>
+        </div>
+        <div id="growth-callout-written"></div>
+        <div id="res-review" style="margin-top:24px;"></div>
+        <button id="btn-print" class="btn">인쇄 / PDF 저장</button>
+        <button id="btn-retake" class="btn btn-secondary">다시 풀기</button>
+        <button id="btn-retake-mode" class="btn btn-secondary">모드 선택으로</button>
+    </div>
+</div>
+
+<div id="screen-setup-practical" class="screen">
+    <div class="container">
+        <span class="back-link" id="back-to-mode-2">← 모드 선택으로</span>
+        <h1>실기(단답형·주관식) 응시 설정</h1>
+        <p class="sub">화재감식학·화재조사실무 분야의 단답형·서술형(주관식) 문제입니다. 직접 답을 써보거나 생각한 뒤 <strong>정답 보기</strong>로 모범답안·채점 포인트를 확인하고, 스스로 O(정확)/△(부분점수)/X(오답)로 채점하세요.</p>
+
+        <div class="cat-toolbar">
+            <button type="button" id="btn-select-all-pr">전체선택</button>
+            <button type="button" id="btn-select-none-pr">전체해제</button>
+        </div>
+        <div class="checkbox-group" id="practical-checkboxes"></div>
+
+        <div class="form-group" style="max-width:640px; margin:22px auto 0;">
+            <label for="numq-pr">문항 수</label>
+            <select id="numq-pr">
+                <option value="10">10문제</option>
+                <option value="20" selected>20문제</option>
+                <option value="9999">선택 분야 전체 (복습용)</option>
+            </select>
+        </div>
+
+        <button id="btn-start-practical" class="btn">실기 연습 시작</button>
+    </div>
+</div>
+
+<div id="screen-practical-card" class="screen">
+    <div class="container">
+        <div class="card-counter" id="pr-counter"></div>
+        <div class="progress-track"><div class="progress-fill" id="pr-progress" style="width:0%"></div></div>
+        <div class="flash-card">
+            <div class="q-cat" id="pr-cat"></div>
+            <span class="flash-type" id="pr-type"></span>
+            <span class="flash-official" id="pr-official" style="display:none;">★ 시험대비 요약서 수록 주관식 예시문제</span>
+            <div class="flash-question" id="pr-question"></div>
+            <textarea class="flash-textarea" id="pr-textarea" placeholder="여기에 직접 답을 써보세요 (채점에는 반영되지 않으며, 스스로 정리해보는 용도입니다)"></textarea>
+            <div class="flash-hint">✏ 답을 써보거나 머릿속으로 정리한 뒤 아래 버튼을 눌러 모범답안을 확인하세요.</div>
+            <button class="btn" id="btn-reveal">정답(모범답안) 보기</button>
+            <div class="flash-answer" id="pr-answer-box" style="display:none;">
+                <span class="flash-answer-label">모범답안 · 채점 포인트</span>
+                <div id="pr-answer-text"></div>
+                <div class="flash-source" id="pr-source"></div>
+            </div>
+            <div class="self-mark-row" id="pr-mark-row" style="display:none;">
+                <button class="mark-o" data-mark="o">O 정확히 맞음</button>
+                <button class="mark-h" data-mark="h">△ 부분점수</button>
+                <button class="mark-x" data-mark="x">X 오답/모름</button>
+            </div>
+        </div>
+        <div class="flash-nav">
+            <button class="btn btn-secondary" id="btn-pr-prev">◀ 이전 문제</button>
+            <button class="btn" id="btn-pr-next">다음 문제 ▶</button>
+        </div>
+    </div>
+</div>
+
+<div id="screen-practical-result" class="screen">
+    <div class="container">
+        <h1>채점 결과 (실기)</h1>
+        <div class="result-box">
+            <div class="result-item">응시일자: <span id="pr-res-date"></span> · 응시분야: <span id="pr-res-subjects"></span></div>
+            <div class="result-score"><span id="pr-res-score"></span> / 100 점</div>
+            <div class="result-sub" id="pr-res-count"></div>
+            <div class="result-sub" style="font-size:12px;">※ 실기 채점은 본인이 O(1점)/△(0.5점)/X(0점)로 직접 표시한 결과이며, 실제 채점기준표(부분점수)에 근거한 자가 참고용 점수입니다.</div>
+        </div>
+        <div id="growth-callout-practical"></div>
+        <div id="pr-review" style="margin-top:24px;"></div>
+        <button id="btn-print-pr" class="btn">인쇄 / PDF 저장</button>
+        <button id="btn-retake-practical" class="btn btn-secondary">다시 풀기</button>
+        <button id="btn-retake-mode-pr" class="btn btn-secondary">모드 선택으로</button>
+    </div>
+</div>
+
+<script>
+// Loaded asynchronously from data/*.json at boot (see the IIFE at the
+// bottom of this script) rather than embedded inline — keeps this file
+// small and readable in git history as the question bank grows.
+let questionBank = null;
+let practicalBank = null;
+
+let selectedSubjects = [];
+let currentExamQuestions = [];
+let examGradeMode = 'batch'; // 'batch' | 'immediate'
+let examImmPicks = [];       // picked option number (or null) per question, immediate mode
+let examImmIndex = 0;
+let userName = '';
+let timerInterval;
+let timeElapsed = 0;
+
+// ---- Supabase: real cross-device sync ----
+// This page is a plain hosted website (not a Claude artifact), so a normal
+// network call works no matter how the page was opened — bookmarked,
+// added to the home screen, or a downloaded copy — as long as there's a
+// network connection. Sync activates once BOTH of these are true:
+//   1) SUPABASE_URL / SUPABASE_ANON_KEY below are filled in (they're build
+//      placeholders until the project exists), and
+//   2) the person has filled in 소방서+이름 on the mode-select screen —
+//      that pair is the "who is this" key rows are stored under.
+const SUPABASE_URL = 'https://mryhpkvutbftypyxtqqe.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_Mp5YebAthAOTV7gkF_xa0A_CWMr6t8e';
+let sb = null;
+try {
+    if (window.supabase && SUPABASE_URL && !SUPABASE_URL.startsWith('__')) {
+        sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+} catch (e) { sb = null; }
+
+function ownerKey() {
+    const station = (currentProfile.station || '').trim();
+    const name = (currentProfile.name || '').trim();
+    if (!station || !name) return null;
+    return station + '::' + name;
+}
+function syncEnabled() {
+    return !!(sb && ownerKey());
+}
+
+// ---- 틀린문제 모음 (wrong-answer review) ----
+// Local-first store, keyed by a stable hash of category+question text.
+// localStorage is always the source of truth for what THIS device/browser
+// shows; when sync is enabled, writes are also mirrored to Supabase and
+// pulled from there so other devices under the same 소방서+이름 catch up.
+const WRONG_KEYS = { mcq: 'ffi_wrong_mcq_v1', practical: 'ffi_wrong_practical_v1' };
+
+function hashStr(s) {
+    let h = 0;
+    for (let i = 0; i < s.length; i++) {
+        h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
+    }
+    return (h >>> 0).toString(36);
+}
+function wrongIdFor(q) {
+    return hashStr((q.category || '') + '|' + (q.question || ''));
+}
+function wrongTableFor(kind) {
+    return kind === 'mcq' ? 'ffi_wrong_mcq' : 'ffi_wrong_practical';
+}
+function wrongRowFor(kind, id, q) {
+    if (kind === 'mcq') {
+        return {
+            owner_key: ownerKey(), wrong_id: id,
+            category: q.category || '', question: q.question || '',
+            options: q.options || null, answer: q.answer, source: q.source || '',
+            reference: q.reference || '', updated_at: new Date().toISOString()
+        };
+    }
+    return {
+        owner_key: ownerKey(), wrong_id: id,
+        category: q.category || '', question: q.question || '',
+        answer: q.answer || '', source: q.source || '',
+        official: !!q.official, qtype: q.qtype || '',
+        updated_at: new Date().toISOString()
+    };
+}
+
+const wrongStore = {
+    _localMap(kind) {
+        try {
+            const raw = safeGet(WRONG_KEYS[kind]);
+            return raw ? JSON.parse(raw) : {};
+        } catch (e) { return {}; }
+    },
+    _saveLocalMap(kind, map) {
+        safeSet(WRONG_KEYS[kind], JSON.stringify(map));
+    },
+    getAll(kind) {
+        const map = this._localMap(kind);
+        return Object.keys(map).map(id => map[id]);
+    },
+    count(kind) {
+        return Object.keys(this._localMap(kind)).length;
+    },
+    record(kind, q) {
+        const id = wrongIdFor(q);
+        const map = this._localMap(kind);
+        const item = { ...q, _wrongId: id, _ts: Date.now() };
+        map[id] = item;
+        this._saveLocalMap(kind, map);
+        updateWrongBadgeUI();
+        if (syncEnabled()) {
+            sb.from(wrongTableFor(kind))
+              .upsert(wrongRowFor(kind, id, q), { onConflict: 'owner_key,wrong_id' })
+              .then(() => {}).catch(() => {});
+        }
+    },
+    clear(kind, q) {
+        const id = wrongIdFor(q);
+        const map = this._localMap(kind);
+        if (map[id]) {
+            delete map[id];
+            this._saveLocalMap(kind, map);
+        }
+        updateWrongBadgeUI();
+        if (syncEnabled()) {
+            sb.from(wrongTableFor(kind)).delete()
+              .eq('owner_key', ownerKey()).eq('wrong_id', id)
+              .then(() => {}).catch(() => {});
+        }
+    },
+    clearAll(kind) {
+        this._saveLocalMap(kind, {});
+        updateWrongBadgeUI();
+        if (syncEnabled()) {
+            sb.from(wrongTableFor(kind)).delete().eq('owner_key', ownerKey())
+              .then(() => {}).catch(() => {});
+        }
+    },
+    async pullFromRemote() {
+        if (!syncEnabled()) return;
+        for (const kind of ['mcq', 'practical']) {
+            try {
+                const { data, error } = await sb.from(wrongTableFor(kind))
+                    .select('*').eq('owner_key', ownerKey());
+                if (error || !data) continue;
+                const localMap = this._localMap(kind);
+                data.forEach(row => {
+                    localMap[row.wrong_id] = kind === 'mcq' ? {
+                        category: row.category, question: row.question,
+                        options: row.options, answer: row.answer,
+                        source: row.source, reference: row.reference,
+                        _wrongId: row.wrong_id, _ts: Date.parse(row.updated_at || '') || Date.now()
+                    } : {
+                        category: row.category, question: row.question,
+                        answer: row.answer, source: row.source,
+                        official: row.official, qtype: row.qtype,
+                        _wrongId: row.wrong_id, _ts: Date.parse(row.updated_at || '') || Date.now()
+                    };
+                });
+                this._saveLocalMap(kind, localMap);
+            } catch (e) { /* ignore - localStorage stays authoritative */ }
+        }
+        updateWrongBadgeUI();
+    }
+};
+
+// Runs once the profile (소방서+이름) is complete: pulls this person's
+// cloud-saved wrong-answer lists and growth records into this browser.
+let lastSyncedOwnerKey = null;
+async function trySyncOnProfileReady() {
+    const key = ownerKey();
+    if (!syncEnabled() || key === lastSyncedOwnerKey) { updateWrongBadgeUI(); return; }
+    lastSyncedOwnerKey = key;
+    try { await wrongStore.pullFromRemote(); } catch (e) {}
+    try { await pullRecordsFromRemote(); } catch (e) {}
+    updateProfileStatus();
+    updateWrongBadgeUI();
+}
+
+function updateWrongBadgeUI() {
+    const mcqCount = wrongStore.count('mcq');
+    const prCount = wrongStore.count('practical');
+
+    const badge = document.getElementById('wrong-sync-badge');
+    if (badge) {
+        badge.textContent = !sb ? '동기화 설정 전'
+            : syncEnabled() ? '기기 간 동기화 중'
+            : '이름 입력 시 동기화';
+    }
+
+    const wCard = document.getElementById('wrong-card-written');
+    const pCard = document.getElementById('wrong-card-practical');
+    if (wCard) {
+        wCard.classList.toggle('disabled', mcqCount === 0);
+        document.getElementById('wrong-tag-written').textContent = `${mcqCount}문제`;
+        document.getElementById('wrong-desc-written').textContent = mcqCount > 0
+            ? `틀린 문제 ${mcqCount}개를 모아서 다시 풀어볼 수 있어요.`
+            : '아직 틀린 문제가 없어요.';
+    }
+    if (pCard) {
+        pCard.classList.toggle('disabled', prCount === 0);
+        document.getElementById('wrong-tag-practical').textContent = `${prCount}문제`;
+        document.getElementById('wrong-desc-practical').textContent = prCount > 0
+            ? `△·X로 표시한 문제 ${prCount}개를 모아서 다시 풀어볼 수 있어요.`
+            : '아직 틀리거나 △로 표시한 문제가 없어요.';
+    }
+    const note = document.getElementById('wrong-sync-note');
+    if (note) {
+        note.textContent = !sb
+            ? '⚠ 아직 클라우드 동기화가 설정되지 않아 이 기기에만 저장돼요.'
+            : syncEnabled()
+            ? '✅ 소방서·이름 기준으로 이 기기와 다른 기기가 자동으로 동기화됩니다.'
+            : '⚠ 모드 선택 화면에서 소방서와 이름을 입력하면 그때부터 다른 기기와 자동 동기화됩니다.';
+    }
+}
+
+// ---- mode navigation ----
+document.getElementById('mode-card-written').addEventListener('click', () => showScreen('screen-setup'));
+document.getElementById('mode-card-practical').addEventListener('click', () => showScreen('screen-setup-practical'));
+document.getElementById('back-to-mode-1').addEventListener('click', () => showScreen('screen-mode'));
+document.getElementById('back-to-mode-2').addEventListener('click', () => showScreen('screen-mode'));
+document.getElementById('btn-retake-mode').addEventListener('click', () => showScreen('screen-mode'));
+document.getElementById('btn-retake-mode-pr').addEventListener('click', () => showScreen('screen-mode'));
+
+// =====================================================================
+// 사용자 프로필(소방서·이름) & 응시 기록(성장 추이) — localStorage 기반
+// =====================================================================
+const STATIONS = [
+    "강남소방서","강동소방서","강북소방서","강서소방서","관악소방서","광진소방서",
+    "구로소방서","금천소방서","노원소방서","도봉소방서","동대문소방서","동작소방서",
+    "마포소방서","서대문소방서","서초소방서","성동소방서","성북소방서","송파소방서",
+    "양천소방서","영등포소방서","용산소방서","은평소방서","종로소방서","중랑소방서","중부소방서"
+];
+const PROFILE_KEY = 'ffi_profile_v1';
+const RECORDS_KEY = 'ffi_records_v1';
+
+let currentProfile = { station: '', name: '' };
+
+function safeGet(key) {
+    try { return localStorage.getItem(key); } catch (e) { return null; }
+}
+function safeSet(key, val) {
+    try { localStorage.setItem(key, val); return true; } catch (e) { return false; }
+}
+
+function loadProfile() {
+    try {
+        const raw = safeGet(PROFILE_KEY);
+        if (raw) currentProfile = JSON.parse(raw);
+    } catch (e) { /* ignore */ }
+}
+function saveProfile() {
+    safeSet(PROFILE_KEY, JSON.stringify(currentProfile));
+}
+function initProfileUI() {
+    const sel = document.getElementById('profile-station');
+    sel.innerHTML = '<option value="">소방서 선택</option>' + STATIONS.map(s => `<option value="${s}">${s}</option>`).join('');
+    loadProfile();
+    sel.value = currentProfile.station || '';
+    document.getElementById('profile-name').value = currentProfile.name || '';
+    updateProfileStatus();
+    trySyncOnProfileReady();
+
+    sel.addEventListener('change', () => {
+        currentProfile.station = sel.value;
+        saveProfile();
+        updateProfileStatus();
+        trySyncOnProfileReady();
+    });
+    let nameSyncTimer = null;
+    document.getElementById('profile-name').addEventListener('input', function() {
+        currentProfile.name = this.value.trim();
+        saveProfile();
+        updateProfileStatus();
+        clearTimeout(nameSyncTimer);
+        nameSyncTimer = setTimeout(trySyncOnProfileReady, 600); // debounce while typing
+    });
+}
+function updateProfileStatus() {
+    const box = document.getElementById('profile-status');
+    if (currentProfile.station && currentProfile.name) {
+        const myRecords = getMyRecords();
+        box.textContent = `✔ ${currentProfile.station} ${currentProfile.name}님으로 누적 ${myRecords.length}회 응시한 기록이 자동으로 저장되고 있어요.`;
+    } else {
+        box.textContent = '';
+    }
+}
+function requireProfile() {
+    // Never block quiz-taking on the profile fields being empty — saveRecord()
+    // and renderGrowthCallout() already skip tracking gracefully when there's
+    // no profile, so there's nothing to guard here. (Previously this alerted
+    // and redirected to screen-mode, which looked like "the quiz won't open.")
+    return true;
+}
+
+function loadAllRecords() {
+    try {
+        const raw = safeGet(RECORDS_KEY);
+        return raw ? JSON.parse(raw) : [];
+    } catch (e) { return []; }
+}
+function getMyRecords(mode) {
+    const all = loadAllRecords();
+    return all.filter(r => r.station === currentProfile.station && r.name === currentProfile.name && (!mode || r.mode === mode));
+}
+function newRecordId() {
+    try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (e) {}
+    return 'r' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
+}
+function saveRecord(data) {
+    const rec = {
+        id: newRecordId(),
+        station: currentProfile.station,
+        name: currentProfile.name,
+        mode: data.mode,
+        date: new Date().toISOString(),
+        score: data.score,
+        correct: data.correct,
+        total: data.total,
+        subjects: data.subjects || [],
+    };
+    if (!currentProfile.station || !currentProfile.name) return rec; // not tracked without profile
+    const all = loadAllRecords();
+    all.push(rec);
+    safeSet(RECORDS_KEY, JSON.stringify(all));
+    if (syncEnabled()) {
+        sb.from('ffi_records').upsert({
+            record_id: rec.id, owner_key: ownerKey(), mode: rec.mode, date: rec.date,
+            score: rec.score, correct: rec.correct, total: rec.total, subjects: rec.subjects
+        }, { onConflict: 'record_id' }).then(() => {}).catch(() => {});
+    }
+    return rec;
+}
+async function pullRecordsFromRemote() {
+    if (!syncEnabled()) return;
+    try {
+        const { data, error } = await sb.from('ffi_records').select('*').eq('owner_key', ownerKey());
+        if (error || !data) return;
+        const all = loadAllRecords();
+        const known = new Set(all.map(r => r.id));
+        let added = false;
+        data.forEach(row => {
+            if (known.has(row.record_id)) return;
+            all.push({
+                id: row.record_id, station: currentProfile.station, name: currentProfile.name,
+                mode: row.mode, date: row.date, score: row.score, correct: row.correct,
+                total: row.total, subjects: row.subjects || []
+            });
+            added = true;
+        });
+        if (added) {
+            all.sort((a, b) => new Date(a.date) - new Date(b.date));
+            safeSet(RECORDS_KEY, JSON.stringify(all));
+        }
+    } catch (e) { /* ignore - localStorage stays authoritative */ }
+}
+function renderGrowthCallout(elId, rec, modeLabel) {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    if (!currentProfile.station || !currentProfile.name) { el.innerHTML = ''; return; }
+    const mine = getMyRecords(modeLabel);
+    const count = mine.length;
+    if (count <= 1) {
+        el.innerHTML = `<div class="growth-callout neutral">🎉 ${currentProfile.name}님의 첫 ${modeLabel} 응시 기록이 저장되었어요. 다음에 다시 풀면 점수 변화를 보여드릴게요!</div>`;
+        return;
+    }
+    const prev = mine[mine.length - 2];
+    const diff = rec.score - prev.score;
+    const avgBefore = Math.round(mine.slice(0, -1).reduce((s, r) => s + r.score, 0) / (count - 1));
+    let cls = 'neutral', msg;
+    if (diff > 0) { cls = ''; msg = `📈 지난 응시(${prev.score}점) 대비 <strong>+${diff}점</strong> 상승했어요!`; }
+    else if (diff < 0) { cls = 'down'; msg = `지난 응시(${prev.score}점) 대비 ${diff}점. 오답노트를 다시 살펴보세요.`; }
+    else { msg = `지난 응시와 동점(${prev.score}점)이에요.`; }
+    el.innerHTML = `<div class="growth-callout ${cls}">${msg} · 이번이 <strong>${count}번째</strong> ${modeLabel} 응시 · 이전 평균 ${avgBefore}점</div>`;
+}
+
+document.getElementById('btn-show-history').addEventListener('click', () => {
+    renderHistoryScreen();
+    showScreen('screen-history');
+});
+document.getElementById('back-to-mode-3').addEventListener('click', () => showScreen('screen-mode'));
+
+// ---- 틀린문제 모음 screen ----
+document.getElementById('btn-show-wrong').addEventListener('click', () => {
+    updateWrongBadgeUI();
+    showScreen('screen-wrong');
+});
+document.getElementById('back-to-mode-4').addEventListener('click', () => showScreen('screen-mode'));
+
+document.getElementById('wrong-card-written').addEventListener('click', () => {
+    const items = wrongStore.getAll('mcq');
+    if (items.length === 0) return;
+    userName = currentProfile.name;
+    selectedSubjects = Array.from(new Set(items.map(q => q.category)));
+    currentExamQuestions = items.map(q => ({ ...q }));
+    examGradeMode = 'batch';
+    document.getElementById('exam-batch-wrap').style.display = 'block';
+    document.getElementById('exam-immediate-wrap').style.display = 'none';
+    renderQuestions();
+    document.getElementById('exam-total').textContent = currentExamQuestions.length;
+    showScreen('screen-exam');
+    startTimer();
+});
+
+document.getElementById('wrong-card-practical').addEventListener('click', () => {
+    const items = wrongStore.getAll('practical');
+    if (items.length === 0) return;
+    prSelectedSubjects = Array.from(new Set(items.map(q => q.category)));
+    prCards = items.map(q => ({ ...q }));
+    prMarks = new Array(prCards.length).fill(null);
+    prRevealed = new Array(prCards.length).fill(false);
+    prDrafts = new Array(prCards.length).fill('');
+    prIndex = 0;
+    showScreen('screen-practical-card');
+    renderPracticalCard();
+});
+
+document.getElementById('btn-wrong-clear').addEventListener('click', () => {
+    wrongStore.clearAll('mcq');
+    wrongStore.clearAll('practical');
+    updateWrongBadgeUI();
+});
+
+function renderHistoryScreen() {
+    const subtitle = document.getElementById('history-subtitle');
+    const content = document.getElementById('history-content');
+    if (!currentProfile.station || !currentProfile.name) {
+        subtitle.textContent = '소방서와 이름을 입력하면 나의 응시 기록을 볼 수 있어요.';
+        content.innerHTML = `<div class="history-empty">모드 선택 화면에서 소방서와 이름을 먼저 입력해 주세요.</div>`;
+        return;
+    }
+    const mine = getMyRecords().slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+    subtitle.innerHTML = `<strong>${currentProfile.station} ${currentProfile.name}</strong>님의 전체 응시 기록`;
+    if (mine.length === 0) {
+        content.innerHTML = `<div class="history-empty">아직 응시 기록이 없어요. 필기 또는 실기를 풀어보면 여기에 기록이 쌓입니다.</div>`;
+        return;
+    }
+    const writtenCount = mine.filter(r => r.mode === '필기').length;
+    const practicalCount = mine.filter(r => r.mode === '실기').length;
+    const avgAll = Math.round(mine.reduce((s, r) => s + r.score, 0) / mine.length);
+
+    let html = `<div class="history-summary-row">
+        <div class="history-stat"><div class="num">${mine.length}</div><div class="lbl">총 응시 횟수</div></div>
+        <div class="history-stat"><div class="num">${avgAll}</div><div class="lbl">전체 평균 점수</div></div>
+        <div class="history-stat"><div class="num">${writtenCount} / ${practicalCount}</div><div class="lbl">필기 / 실기 횟수</div></div>
+    </div>`;
+
+    const chartRecords = mine.slice(-15);
+    html += `<div class="history-chart">`;
+    chartRecords.forEach((r, i) => {
+        const barCls = r.mode === '실기' ? 'history-bar practical-bar' : 'history-bar';
+        html += `<div class="history-bar-wrap">
+            <div class="${barCls}" style="height:${Math.max(4, r.score)}%;"><span class="bar-val">${r.score}</span></div>
+            <div class="history-bar-idx">${i + 1}</div>
+        </div>`;
+    });
+    html += `</div>`;
+
+    html += `<table class="history-table"><thead><tr><th>#</th><th>날짜</th><th>모드</th><th>점수</th><th>정답/총문항</th><th>응시분야</th></tr></thead><tbody>`;
+    mine.slice().reverse().forEach((r, idx) => {
+        const n = mine.length - idx;
+        const d = new Date(r.date);
+        const dateStr = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+        const modeCls = r.mode === '실기' ? 'hist-mode-practical' : 'hist-mode-written';
+        html += `<tr>
+            <td>${n}</td><td>${dateStr}</td><td class="${modeCls}">${r.mode}</td>
+            <td>${r.score}점</td><td>${r.correct}/${r.total}</td>
+            <td style="text-align:left; font-size:11.5px; color:var(--muted);">${(r.subjects||[]).join(', ')}</td>
+        </tr>`;
+    });
+    html += `</tbody></table>`;
+
+    content.innerHTML = html;
+}
+
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+}
+
+const CAT_ORDER = [
+    "화재조사 서류·보고·조사절차",
+    "화재조사 관계법령·피해액산정",
+    "방화감식·방화범죄",
+    "화재패턴·연소흔적",
+    "전기화재감식",
+    "가스화재감식",
+    "화학물질화재감식",
+    "미소화원감식",
+    "차량화재감식",
+    "제조물책임법",
+    "연소론·화재과학",
+    "출화개소·발화원 판정",
+    "화재조사 종합(기타)"
+];
+
+function initCheckboxes() {
+    const container = document.getElementById('subject-checkboxes');
+    container.innerHTML = '';
+    const cats = Object.keys(questionBank).sort((a,b) => {
+        const ia = CAT_ORDER.indexOf(a), ib = CAT_ORDER.indexOf(b);
+        return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+    });
+    cats.forEach(cat => {
+        const n = questionBank[cat].length;
+        container.innerHTML += `
+            <label class="checkbox-label">
+                <input type="checkbox" value="${cat}" class="subj-check">
+                <span>${cat}<span class="cnt">(${n}문항)</span></span>
+            </label>`;
+    });
+}
+
+document.getElementById('btn-select-all').addEventListener('click', () => {
+    document.querySelectorAll('.subj-check').forEach(cb => cb.checked = true);
+});
+document.getElementById('btn-select-none').addEventListener('click', () => {
+    document.querySelectorAll('.subj-check').forEach(cb => cb.checked = false);
+});
+
+document.getElementById('btn-start').addEventListener('click', function() {
+    if (!requireProfile()) return;
+    const checked = document.querySelectorAll('.subj-check:checked');
+    if (checked.length === 0) {
+        alert('최소 1개 이상의 분야를 선택해 주세요.');
+        return;
+    }
+    userName = currentProfile.name;
+    selectedSubjects = Array.from(checked).map(cb => cb.value);
+
+    let pool = [];
+    selectedSubjects.forEach(cat => {
+        const qs = questionBank[cat].map(q => ({ ...q, category: cat }));
+        pool = pool.concat(qs);
+    });
+
+    for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+
+    const numq = parseInt(document.getElementById('numq').value, 10);
+    currentExamQuestions = pool.slice(0, Math.min(numq, pool.length));
+
+    const modeRadio = document.querySelector('input[name="exam-grade-mode"]:checked');
+    examGradeMode = modeRadio ? modeRadio.value : 'batch';
+
+    if (examGradeMode === 'immediate') {
+        examImmPicks = new Array(currentExamQuestions.length).fill(null);
+        examImmIndex = 0;
+        document.getElementById('exam-batch-wrap').style.display = 'none';
+        document.getElementById('exam-immediate-wrap').style.display = 'block';
+        document.getElementById('exam-imm-total').textContent = currentExamQuestions.length;
+        renderImmediateQuestion();
+    } else {
+        document.getElementById('exam-batch-wrap').style.display = 'block';
+        document.getElementById('exam-immediate-wrap').style.display = 'none';
+        renderQuestions();
+        document.getElementById('exam-total').textContent = currentExamQuestions.length;
+    }
+
+    showScreen('screen-exam');
+    startTimer();
+});
+
+function renderQuestions() {
+    const container = document.getElementById('exam-questions');
+    container.innerHTML = '';
+    currentExamQuestions.forEach((q, index) => {
+        let html = `<div class="question-block">
+            <div class="q-cat">${q.category}</div>
+            <div class="question-title">${index + 1}. ${q.question}</div>`;
+        q.options.forEach((opt, optIndex) => {
+            const optNum = optIndex + 1;
+            html += `<label class="option-label">
+                <input type="radio" name="q${index}" value="${optNum}">
+                ${optNum}번. ${opt}
+            </label>`;
+        });
+        html += `</div>`;
+        container.innerHTML += html;
+    });
+}
+
+function startTimer() {
+    timeElapsed = 0;
+    clearInterval(timerInterval);
+    updateTimerDisplay();
+    timerInterval = setInterval(() => {
+        timeElapsed++;
+        updateTimerDisplay();
+    }, 1000);
+}
+function updateTimerDisplay() {
+    const m = String(Math.floor(timeElapsed / 60)).padStart(2, '0');
+    const s = String(timeElapsed % 60).padStart(2, '0');
+    document.getElementById('timer-box').textContent = `⏱ ${m}:${s}`;
+}
+
+function finalizeExamResults(getPickedForIndex) {
+    clearInterval(timerInterval);
+    let correctCount = 0;
+    const reviewContainer = document.getElementById('res-review');
+    reviewContainer.innerHTML = '';
+
+    currentExamQuestions.forEach((q, index) => {
+        const pickedVal = getPickedForIndex(index);
+        const isCorrect = pickedVal === q.answer;
+        if (isCorrect) correctCount++;
+
+        if (isCorrect) {
+            wrongStore.clear('mcq', q);
+        } else if (pickedVal !== null && pickedVal !== undefined) {
+            // Only track questions the person actually answered (and got wrong) —
+            // an unanswered question isn't necessarily a "known weak point".
+            wrongStore.record('mcq', q);
+        }
+
+        let block = `<div class="question-block ${isCorrect ? 'correct' : 'wrong'}">
+            <div class="q-cat">${q.category}</div>
+            <div class="question-title">${index + 1}. ${q.question}</div>`;
+        q.options.forEach((opt, optIndex) => {
+            const optNum = optIndex + 1;
+            let cls = 'review-opt';
+            if (optNum === q.answer) cls += ' is-correct';
+            else if (optNum === pickedVal) cls += ' is-wrong-pick';
+            block += `<div class="${cls}">${optNum}번. ${opt}${optNum === q.answer ? ' ✔ 정답' : ''}${(optNum === pickedVal && !isCorrect) ? ' ✘ 선택한 답' : ''}</div>`;
+        });
+        if (pickedVal === null || pickedVal === undefined) {
+            block += `<div class="review-explain"><strong>⚠ 미응답 문제입니다.</strong></div>`;
+        }
+        if (q.reference) {
+            block += `<div class="review-explain"><strong>출제근거:</strong> ${q.reference}</div>`;
+        }
+        block += `</div>`;
+        reviewContainer.innerHTML += block;
+    });
+
+    const total = currentExamQuestions.length;
+    const score = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+
+    document.getElementById('res-name-line').textContent = userName ? `${userName} 님의 응시 결과` : '응시 결과';
+    document.getElementById('res-date').textContent = new Date().toLocaleDateString('ko-KR');
+    document.getElementById('res-subjects').textContent = selectedSubjects.join(', ');
+    document.getElementById('res-score').textContent = score;
+    document.getElementById('res-correct-count').textContent = `총 ${total}문제 중 ${correctCount}문제 정답 (오답 ${total - correctCount}문제)`;
+
+    const rec = saveRecord({ mode: '필기', score, correct: correctCount, total, subjects: selectedSubjects });
+    renderGrowthCallout('growth-callout-written', rec, '필기');
+
+    showScreen('screen-result');
+}
+
+document.getElementById('btn-submit').addEventListener('click', function() {
+    finalizeExamResults((index) => {
+        const picked = document.querySelector(`input[name="q${index}"]:checked`);
+        return picked ? parseInt(picked.value, 10) : null;
+    });
+});
+
+// ---- 문제마다 바로 정답 확인 모드 ----
+function renderImmediateQuestion() {
+    const q = currentExamQuestions[examImmIndex];
+    document.getElementById('exam-imm-current').textContent = examImmIndex + 1;
+    document.getElementById('exam-imm-counter').textContent = `${examImmIndex + 1} / ${currentExamQuestions.length}`;
+    document.getElementById('exam-imm-progress').style.width = `${Math.round((examImmIndex / currentExamQuestions.length) * 100)}%`;
+    document.getElementById('exam-imm-cat').textContent = q.category;
+    document.getElementById('exam-imm-question').textContent = `${examImmIndex + 1}. ${q.question}`;
+
+    const optionsContainer = document.getElementById('exam-imm-options');
+    optionsContainer.innerHTML = '';
+    q.options.forEach((opt, optIndex) => {
+        const optNum = optIndex + 1;
+        const label = document.createElement('label');
+        label.className = 'option-label';
+        label.innerHTML = `<input type="radio" name="exam-imm-choice" value="${optNum}"> ${optNum}번. ${opt}`;
+        label.addEventListener('click', function(e) {
+            e.preventDefault();
+            handleImmediateAnswer(optNum);
+        });
+        optionsContainer.appendChild(label);
+    });
+
+    document.getElementById('exam-imm-feedback').style.display = 'none';
+    document.getElementById('btn-imm-next').style.display = 'none';
+}
+
+function handleImmediateAnswer(pickedVal) {
+    if (examImmPicks[examImmIndex] !== null) return; // already answered
+    examImmPicks[examImmIndex] = pickedVal;
+    const q = currentExamQuestions[examImmIndex];
+    const isCorrect = pickedVal === q.answer;
+
+    const optionsContainer = document.getElementById('exam-imm-options');
+    optionsContainer.querySelectorAll('.option-label').forEach((label, optIndex) => {
+        const optNum = optIndex + 1;
+        label.style.pointerEvents = 'none';
+        if (optNum === q.answer) {
+            label.style.background = '#e6f6ec';
+            label.style.borderColor = '#1e6b3f';
+            label.style.fontWeight = 'bold';
+        } else if (optNum === pickedVal) {
+            label.style.background = '#fbe8e7';
+            label.style.borderColor = 'var(--fire-red-dark)';
+        }
+    });
+
+    const feedback = document.getElementById('exam-imm-feedback');
+    feedback.style.display = 'block';
+    feedback.innerHTML = (isCorrect ? '<strong style="color:#1e6b3f;">✔ 정답입니다!</strong>' : `<strong style="color:var(--fire-red-dark);">✘ 오답입니다.</strong> 정답: ${q.answer}번`)
+        + (q.reference ? `<br><strong>출제근거:</strong> ${q.reference}` : '');
+
+    const nextBtn = document.getElementById('btn-imm-next');
+    nextBtn.textContent = (examImmIndex === currentExamQuestions.length - 1) ? '결과 보기' : '다음 문제 ▶';
+    nextBtn.style.display = 'block';
+}
+
+document.getElementById('btn-imm-next').addEventListener('click', function() {
+    if (examImmIndex < currentExamQuestions.length - 1) {
+        examImmIndex++;
+        renderImmediateQuestion();
+    } else {
+        document.getElementById('exam-imm-progress').style.width = '100%';
+        finalizeExamResults((index) => examImmPicks[index]);
+    }
+});
+
+document.getElementById('btn-print').addEventListener('click', function() {
+    window.print();
+});
+
+document.getElementById('btn-retake').addEventListener('click', function() {
+    showScreen('screen-setup');
+});
+
+// =====================================================================
+// 실기(주관식) 모드 — 셀프체크 플래시카드
+// =====================================================================
+let prSelectedSubjects = [];
+let prCards = [];       // current session's cards (with .category injected)
+let prIndex = 0;
+let prMarks = [];       // 'o' | 'h' | 'x' | null, per prCards index
+let prRevealed = [];    // bool per prCards index (has the answer been shown)
+let prDrafts = [];      // user's own typed draft answer, per index (not graded)
+
+function initPracticalCheckboxes() {
+    const container = document.getElementById('practical-checkboxes');
+    container.innerHTML = '';
+    const cats = Object.keys(practicalBank).sort((a,b) => {
+        const ia = CAT_ORDER.indexOf(a), ib = CAT_ORDER.indexOf(b);
+        return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+    });
+    cats.forEach(cat => {
+        const n = practicalBank[cat].length;
+        container.innerHTML += `
+            <label class="checkbox-label">
+                <input type="checkbox" value="${cat}" class="subj-check-pr">
+                <span>${cat}<span class="cnt">(${n}문항)</span></span>
+            </label>`;
+    });
+}
+
+document.getElementById('btn-select-all-pr').addEventListener('click', () => {
+    document.querySelectorAll('.subj-check-pr').forEach(cb => cb.checked = true);
+});
+document.getElementById('btn-select-none-pr').addEventListener('click', () => {
+    document.querySelectorAll('.subj-check-pr').forEach(cb => cb.checked = false);
+});
+
+document.getElementById('btn-start-practical').addEventListener('click', function() {
+    if (!requireProfile()) return;
+    const checked = document.querySelectorAll('.subj-check-pr:checked');
+    if (checked.length === 0) {
+        alert('최소 1개 이상의 분야를 선택해 주세요.');
+        return;
+    }
+    prSelectedSubjects = Array.from(checked).map(cb => cb.value);
+
+    let pool = [];
+    prSelectedSubjects.forEach(cat => {
+        const qs = practicalBank[cat].map(q => ({ ...q, category: cat }));
+        pool = pool.concat(qs);
+    });
+    for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    const numq = parseInt(document.getElementById('numq-pr').value, 10);
+    prCards = pool.slice(0, Math.min(numq, pool.length));
+    prMarks = new Array(prCards.length).fill(null);
+    prRevealed = new Array(prCards.length).fill(false);
+    prDrafts = new Array(prCards.length).fill('');
+    prIndex = 0;
+
+    showScreen('screen-practical-card');
+    renderPracticalCard();
+});
+
+function renderPracticalCard() {
+    const q = prCards[prIndex];
+    document.getElementById('pr-counter').textContent = `${prIndex + 1} / ${prCards.length} 문제`;
+    document.getElementById('pr-progress').style.width = `${Math.round(((prIndex) / prCards.length) * 100)}%`;
+    document.getElementById('pr-cat').textContent = q.category;
+    const prTypeEl = document.getElementById('pr-type');
+    if (q.qtype === '단답형') {
+        prTypeEl.textContent = '단답형';
+        prTypeEl.className = 'flash-type flash-type-sa';
+    } else {
+        prTypeEl.textContent = '주관식(서술형)';
+        prTypeEl.className = 'flash-type flash-type-es';
+    }
+    document.getElementById('pr-official').style.display = q.official ? 'inline-block' : 'none';
+    document.getElementById('pr-question').textContent = q.question;
+    document.getElementById('pr-textarea').value = prDrafts[prIndex] || '';
+
+    const revealed = prRevealed[prIndex];
+    document.getElementById('pr-answer-box').style.display = revealed ? 'block' : 'none';
+    document.getElementById('btn-reveal').style.display = revealed ? 'none' : 'block';
+    document.getElementById('pr-mark-row').style.display = revealed ? 'grid' : 'none';
+    if (revealed) {
+        document.getElementById('pr-answer-text').textContent = q.answer;
+        document.getElementById('pr-source').textContent = q.source ? `출처: ${q.source}` : '';
+    }
+    document.querySelectorAll('#pr-mark-row button').forEach(b => {
+        b.classList.toggle('picked', prMarks[prIndex] === b.dataset.mark);
+    });
+    document.getElementById('btn-pr-prev').style.visibility = prIndex === 0 ? 'hidden' : 'visible';
+    document.getElementById('btn-pr-next').textContent = (prIndex === prCards.length - 1) ? '채점 결과 보기' : '다음 문제 ▶';
+}
+
+document.getElementById('pr-textarea').addEventListener('input', function() {
+    prDrafts[prIndex] = this.value;
+});
+
+document.getElementById('btn-reveal').addEventListener('click', function() {
+    prRevealed[prIndex] = true;
+    renderPracticalCard();
+});
+
+document.getElementById('pr-mark-row').addEventListener('click', function(e) {
+    const btn = e.target.closest('button[data-mark]');
+    if (!btn) return;
+    prMarks[prIndex] = btn.dataset.mark;
+    renderPracticalCard();
+    if (prIndex < prCards.length - 1) {
+        setTimeout(() => { prIndex++; renderPracticalCard(); }, 220);
+    }
+});
+
+document.getElementById('btn-pr-prev').addEventListener('click', function() {
+    if (prIndex > 0) { prIndex--; renderPracticalCard(); }
+});
+document.getElementById('btn-pr-next').addEventListener('click', function() {
+    if (prIndex < prCards.length - 1) {
+        prIndex++;
+        renderPracticalCard();
+    } else {
+        showPracticalResult();
+    }
+});
+
+function showPracticalResult() {
+    let oCount = 0, hCount = 0, xCount = 0, unmarked = 0;
+    const reviewContainer = document.getElementById('pr-review');
+    reviewContainer.innerHTML = '';
+    prCards.forEach((q, i) => {
+        const mark = prMarks[i];
+        if (mark === 'o') oCount++;
+        else if (mark === 'h') hCount++;
+        else if (mark === 'x') xCount++;
+        else unmarked++;
+
+        if (mark === 'o') {
+            wrongStore.clear('practical', q);
+        } else if (mark === 'h' || mark === 'x') {
+            wrongStore.record('practical', q);
+        }
+        // unmarked (skipped) cards are left untouched either way
+
+        const markCls = mark === 'x' ? 'mark-x-item' : (mark === 'h' ? 'mark-h-item' : '');
+        const markLabel = mark === 'o' ? '<span class="pr-mark o">O 정확히 맞음</span>'
+            : mark === 'h' ? '<span class="pr-mark h">△ 부분점수</span>'
+            : mark === 'x' ? '<span class="pr-mark x">X 오답/모름</span>'
+            : '<span class="pr-mark x">미채점(건너뜀)</span>';
+        reviewContainer.innerHTML += `
+            <div class="pr-review-item ${markCls}">
+                ${markLabel}
+                <div class="pr-q">${i + 1}. [${q.category}] ${q.question}</div>
+                <div class="pr-a">${q.answer}</div>
+            </div>`;
+    });
+
+    const total = prCards.length;
+    const score = total > 0 ? Math.round(((oCount * 1 + hCount * 0.5) / total) * 100) : 0;
+    document.getElementById('pr-res-date').textContent = new Date().toLocaleDateString('ko-KR');
+    document.getElementById('pr-res-subjects').textContent = prSelectedSubjects.join(', ');
+    document.getElementById('pr-res-score').textContent = score;
+    document.getElementById('pr-res-count').textContent = `총 ${total}문제 중 O ${oCount} · △ ${hCount} · X ${xCount}${unmarked ? ` · 미채점 ${unmarked}` : ''}`;
+
+    const rec = saveRecord({ mode: '실기', score, correct: oCount, total, subjects: prSelectedSubjects, oCount, hCount, xCount });
+    renderGrowthCallout('growth-callout-practical', rec, '실기');
+
+    showScreen('screen-practical-result');
+}
+
+document.getElementById('btn-print-pr').addEventListener('click', function() {
+    window.print();
+});
+document.getElementById('btn-retake-practical').addEventListener('click', function() {
+    showScreen('screen-setup-practical');
+});
+
+(async function boot() {
+    try {
+        const [qbRes, pbRes] = await Promise.all([
+            fetch('data/questionbank.json'),
+            fetch('data/practical_bank.json')
+        ]);
+        if (!qbRes.ok || !pbRes.ok) throw new Error('fetch failed');
+        questionBank = await qbRes.json();
+        practicalBank = await pbRes.json();
+    } catch (e) {
+        document.body.innerHTML = '<p style="padding:60px 24px;text-align:center;color:#a8241d;font-family:sans-serif;">문제 데이터를 불러오지 못했습니다. 새로고침해 주세요.</p>';
+        return;
+    }
+    initCheckboxes();
+    initPracticalCheckboxes();
+    initProfileUI();
+    updateWrongBadgeUI();
+})();
+</script>
+</body>
+</html>
